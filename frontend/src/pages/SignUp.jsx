@@ -6,7 +6,7 @@ import axios from "axios"
 import { userDataContext } from "../context/UserContext.jsx"
 function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
-    const { serverUrl } = useContext(userDataContext)
+    const { serverUrl, userData, setUserData } = useContext(userDataContext)
     const navigate = useNavigate()
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -27,13 +27,15 @@ function SignUp() {
                     password
                 }, { withCredentials: true }
             )
-            console.log(result.data)
-            set.loading(false)
+            setUserData(result.data)
+            setLoading(false)
+            navigate("/customize")
         }
         catch (error) {
             console.log(error)
+            setUserData(null)
             setErr(error.response?.data?.message || "Failed to connect to server. Please try again.")
-            set.loading(false)
+            setLoading(false)
         }
 
     }

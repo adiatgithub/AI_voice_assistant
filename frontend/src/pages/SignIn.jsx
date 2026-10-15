@@ -6,7 +6,7 @@ import axios from "axios"
 import { userDataContext } from "../context/UserContext.jsx"
 function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
-    const { serverUrl } = useContext(userDataContext)
+    const { serverUrl, userData, setUserData } = useContext(userDataContext)
     const navigate = useNavigate()
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
@@ -19,17 +19,19 @@ function SignIn() {
         setErr("")
         try {
             let result = await axios.post(
-                `${serverUrl}/api/auth/signin`,
+                `${serverUrl}/api/auth/login`,
                 {
                     email,
                     password
                 }, { withCredentials: true }
             )
-            console.log(result.data)
+            setUserData(result.data)
             setLoading(false)
+            navigate("/home")
         }
         catch (error) {
             console.log(error)
+            setUserData(null)
             setErr(error.response?.data?.message || "Failed to connect to server. Please try again.")
             setLoading(false)
         }
